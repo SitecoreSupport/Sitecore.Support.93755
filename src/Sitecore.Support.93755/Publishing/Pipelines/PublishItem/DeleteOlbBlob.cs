@@ -30,7 +30,7 @@ namespace Sitecore.Support.Publishing.Pipelines.PublishItem
         foreach (Field field2 in context.PublishHelper.GetVersionToPublish(itemToPublish).Fields)
         {
           Field field3 = targetItem.Fields[field2.ID];
-          if (field2.IsBlobField && (field2.Value != field3.Value) && !string.IsNullOrEmpty(field2.Value))
+          if (field2.IsBlobField && (field2.Value != field3.Value) && !string.IsNullOrEmpty(field2.Value) && !string.IsNullOrEmpty(field3.Value) && field3 != null)
           {
             ItemManager.RemoveBlobStream(new Guid(field3.Value), targetItem.Database);
           }
