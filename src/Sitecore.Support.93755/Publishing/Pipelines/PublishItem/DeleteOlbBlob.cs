@@ -27,14 +27,19 @@ namespace Sitecore.Support.Publishing.Pipelines.PublishItem
       else if ((targetItem != null) && (context.Action != PublishAction.None))
       {
         Item itemToPublish = context.PublishHelper.GetItemToPublish(context.ItemId);
-        foreach (Field field2 in context.PublishHelper.GetVersionToPublish(itemToPublish).Fields)
+
+        var versionToPublish = context.PublishHelper.GetVersionToPublish(itemToPublish);
+        if (versionToPublish != null)
         {
-          Field field3 = targetItem.Fields[field2.ID];
-          if (field2.IsBlobField && (field2.Value != field3.Value) && !string.IsNullOrEmpty(field2.Value) && !string.IsNullOrEmpty(field3.Value) && field3 != null)
+          foreach (Field field2 in versionToPublish.Fields)
           {
-            ItemManager.RemoveBlobStream(new Guid(field3.Value), targetItem.Database);
+            Field field3 = targetItem.Fields[field2.ID];
+            if ((field3 != null) && field2.IsBlobField && (field2.Value != field3.Value) && !string.IsNullOrEmpty(field2.Value) && !string.IsNullOrEmpty(field3.Value))
+            {
+               ItemManager.RemoveBlobStream(new Guid(field3.Value), targetItem.Database);
+            }
           }
-        }
+        }       
       }
     }
   }
